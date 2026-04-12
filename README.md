@@ -87,7 +87,7 @@ This project was built specifically to demonstrate core Object-Oriented Programm
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/BlackCimba/online-marketplace-spring.git
+git clone https://github.com/ZakirIbrahimov/online-marketplace-spring.git
 cd online-marketplace-spring
 
 # 2. Run with the dev profile (uses SQLite + seeds sample data)
