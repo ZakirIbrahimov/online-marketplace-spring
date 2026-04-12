@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="${product.title}">Product</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div th:replace="~{fragments :: nav}"></div>
+<main>
+    <div th:replace="~{fragments :: flash}"></div>
+    <a th:href="@{/products}" class="meta">← Back to catalog</a>
+    <h1 th:text="${product.title}">Title</h1>
+    <p class="price" th:text="${#numbers.formatDecimal(product.price,1,2)}">0</p>
+    <p th:text="${product.description}">Desc</p>
+    <p class="meta">In stock: <span th:text="${product.stock}">0</span></p>
+    <div class="grid" style="max-width:480px;">
+        <img th:each="img : ${product.images}" th:src="@{/uploads/{f}(f=${img.fileName})}"
+             alt="" style="width:100%;border-radius:8px;"/>
+    </div>
+    <form sec:authorize="hasRole('SHOPPER')" class="stacked" th:action="@{/cart/items}" method="post" style="margin-top:1rem;">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <input type="hidden" name="productId" th:value="${product.id}"/>
+        <label>Quantity
+            <input type="number" name="quantity" value="1" min="1" th:attr="max=${product.stock}"/>
+        </label>
+        <button type="submit">Add to cart</button>
+    </form>
+    <p sec:authorize="!isAuthenticated()" class="meta"><a th:href="@{/login}">Sign in</a> to add to cart.</p>
+</main>
+</body>
+</html>

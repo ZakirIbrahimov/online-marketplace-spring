@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Mock payment</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div th:replace="~{fragments :: nav}"></div>
+<main>
+    <div th:replace="~{fragments :: flash}"></div>
+    <h1>Mock payment</h1>
+    <p>Total: <strong th:text="${#numbers.formatDecimal(order.totalAmount,1,2)}"></strong></p>
+    <p class="meta">No real card is charged. Confirm to mark the order as paid and reduce stock.</p>
+    <form th:action="@{/orders/{id}/pay(id=${order.id})}" method="post">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <button type="submit">Confirm payment</button>
+    </form>
+    <p><a th:href="@{/orders/{id}(id=${order.id})}">Back to order</a></p>
+</main>
+</body>
+</html>

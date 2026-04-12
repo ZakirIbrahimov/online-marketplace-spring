@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Disputes</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div th:replace="~{fragments :: nav}"></div>
+<main>
+    <div th:replace="~{fragments :: flash}"></div>
+    <h1>Disputes</h1>
+    <div class="card" th:each="d : ${disputes}" style="margin-bottom:1rem;">
+        <p>Order #<span th:text="${d.order.id}"></span> — <span class="pill" th:text="${d.status}"></span></p>
+        <p>Raised by <span th:text="${d.raisedBy.email}"></span></p>
+        <p th:text="${d.description}"></p>
+        <form th:if="${d.status.name() == 'OPEN'}" class="stacked"
+              th:action="@{/admin/disputes/{id}/resolve(id=${d.id})}" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <label class="meta">Resolution notes
+                <textarea name="notes" rows="2"></textarea>
+            </label>
+            <button type="submit">Mark resolved</button>
+        </form>
+        <p class="meta" th:if="${d.status.name() == 'RESOLVED'}" th:text="${d.resolutionNotes}"></p>
+    </div>
+    <p><a th:href="@{/admin}">← Dashboard</a></p>
+</main>
+</body>
+</html>

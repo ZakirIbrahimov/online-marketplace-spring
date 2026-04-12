@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Pending merchants</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div th:replace="~{fragments :: nav}"></div>
+<main>
+    <div th:replace="~{fragments :: flash}"></div>
+    <h1>Pending merchants</h1>
+    <div class="card" th:each="mp : ${profiles}" style="margin-bottom:1rem;">
+        <p><strong th:text="${mp.businessName}"></strong> — <span th:text="${mp.user.email}"></span></p>
+        <p class="meta" th:text="${mp.description}"></p>
+        <form class="inline-form" th:action="@{/admin/merchants/{id}/approve(id=${mp.id})}" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <button type="submit">Approve</button>
+        </form>
+        <form class="stacked" th:action="@{/admin/merchants/{id}/decline(id=${mp.id})}" method="post" style="margin-top:0.5rem;">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <label class="meta">Reason (optional)
+                <input type="text" name="reason" style="max-width:100%;"/>
+            </label>
+            <button type="submit" class="danger">Decline</button>
+        </form>
+    </div>
+    <p th:if="${profiles.isEmpty()}" class="meta">No pending applications.</p>
+    <p><a th:href="@{/admin}">← Dashboard</a></p>
+</main>
+</body>
+</html>

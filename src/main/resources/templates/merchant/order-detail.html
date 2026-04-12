@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Order</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div th:replace="~{fragments :: nav}"></div>
+<main>
+    <div th:replace="~{fragments :: flash}"></div>
+    <h1>Order #<span th:text="${order.id}"></span></h1>
+    <p><span class="pill" th:text="${order.status}"></span></p>
+    <table class="data">
+        <tr th:each="line : ${order.lines}">
+            <td th:text="${line.productTitle}"></td>
+            <td th:text="${line.quantity}"></td>
+        </tr>
+    </table>
+    <h2>Timeline</h2>
+    <ul class="meta">
+        <li th:each="e : ${events}">
+            <span th:text="${e.createdAt}"></span> —
+            <span th:text="${e.status}"></span>
+            <span th:if="${e.note != null}" th:text="${': ' + e.note}"></span>
+        </li>
+    </ul>
+    <h2>Update status</h2>
+    <form class="inline-form" th:action="@{/merchant/orders/{id}/status(id=${order.id})}" method="post">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <label class="meta">Next
+            <select name="next">
+                <option value="PROCESSING">Processing</option>
+                <option value="SHIPPED">Shipped</option>
+                <option value="DELIVERED">Delivered</option>
+            </select>
+        </label>
+        <button type="submit">Apply</button>
+    </form>
+    <p class="meta">Valid flow: Paid → Processing (optional) → Shipped → Delivered.</p>
+</main>
+</body>
+</html>

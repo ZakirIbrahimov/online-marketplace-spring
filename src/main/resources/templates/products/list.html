@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Products</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div th:replace="~{fragments :: nav}"></div>
+<main>
+    <div th:replace="~{fragments :: flash}"></div>
+    <h1>Products</h1>
+    <form method="get" action="#" th:action="@{/products}" class="stacked">
+        <label>Search
+            <input type="search" name="q" th:value="${q}" placeholder="Title or description"/>
+        </label>
+        <button type="submit">Search</button>
+    </form>
+    <div class="grid" style="margin-top:1rem;">
+        <div class="card" th:each="p : ${page.content}">
+            <a th:href="@{/products/{id}(id=${p.id})}">
+                <img class="thumb" th:if="${!p.images.isEmpty()}"
+                     th:src="@{/uploads/{f}(f=${p.images[0].fileName})}" alt=""/>
+                <div class="thumb meta" th:if="${p.images.isEmpty()}">No image</div>
+                <h2 style="font-size:1rem;margin:0.5rem 0 0;" th:text="${p.title}">Title</h2>
+            </a>
+            <p class="price" th:text="${#numbers.formatDecimal(p.price,1,2)}">0</p>
+        </div>
+    </div>
+    <p th:if="${page.isEmpty()}" class="meta">No products match.</p>
+    <p class="meta" th:if="${page.totalPages > 1}">
+        <a th:if="${page.hasPrevious()}"
+           th:href="@{/products(q=${q},page=${page.number - 1},size=${page.size})}">Previous</a>
+        <span th:text="'Page ' + (${page.number} + 1) + ' / ' + ${page.totalPages}"></span>
+        <a th:if="${page.hasNext()}"
+           th:href="@{/products(q=${q},page=${page.number + 1},size=${page.size})}">Next</a>
+    </p>
+</main>
+</body>
+</html>

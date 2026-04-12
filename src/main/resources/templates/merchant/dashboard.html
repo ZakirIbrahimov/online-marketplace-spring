@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Seller</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div th:replace="~{fragments :: nav}"></div>
+<main>
+    <div th:replace="~{fragments :: flash}"></div>
+    <h1>Seller dashboard</h1>
+    <div th:if="${profile != null}">
+        <p><strong th:text="${profile.businessName}"></strong>
+            <span class="pill" th:text="${profile.approvalStatus}"></span></p>
+        <p class="meta" th:if="${profile.approvalStatus.name() == 'DECLINED'}" th:text="${profile.declineReason}"></p>
+    </div>
+    <p>Earnings (paid &amp; fulfilled lines): <strong class="price" th:text="${#numbers.formatDecimal(earnings,1,2)}">0</strong></p>
+    <p>
+        <a class="btn" th:href="@{/merchant/products}">Manage products</a>
+        <a class="btn secondary" th:href="@{/merchant/orders}">Orders</a>
+    </p>
+    <h2>Your listings</h2>
+    <ul>
+        <li th:each="p : ${products}" th:text="${p.title} + ' — ' + ${p.listingStatus} + ' — stock ' + ${p.stock}"></li>
+    </ul>
+</main>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Cart</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div th:replace="~{fragments :: nav}"></div>
+<main>
+    <div th:replace="~{fragments :: flash}"></div>
+    <h1>Cart</h1>
+    <p th:if="${cart == null || cart.items.isEmpty()}" class="meta">Your cart is empty.</p>
+    <table class="data" th:if="${cart != null && !cart.items.isEmpty()}">
+        <thead>
+        <tr>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Qty</th>
+            <th>Line</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="line : ${cart.items}">
+            <td th:text="${line.product.title}">—</td>
+            <td th:text="${#numbers.formatDecimal(line.product.price,1,2)}">0</td>
+            <td>
+                <form class="inline-form" th:action="@{/cart/items/{id}/quantity(id=${line.id})}" method="post">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                    <input type="number" name="quantity" th:value="${line.quantity}" min="0" style="width:4rem;"/>
+                    <button type="submit" class="secondary">Update</button>
+                </form>
+            </td>
+            <td th:text="${#numbers.formatDecimal(line.product.price * line.quantity,1,2)}">0</td>
+        </tr>
+        </tbody>
+    </table>
+    <p th:if="${cart != null && !cart.items.isEmpty()}">
+        <a class="btn" th:href="@{/checkout}">Checkout</a>
+    </p>
+</main>
+</body>
+</html>

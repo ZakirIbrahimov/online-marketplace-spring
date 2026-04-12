@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Edit product</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div th:replace="~{fragments :: nav}"></div>
+<main>
+    <div th:replace="~{fragments :: flash}"></div>
+    <h1>Edit product</h1>
+    <p class="meta">Saving sends the listing back to admin approval.</p>
+    <div class="grid" style="max-width:400px;margin-bottom:1rem;">
+        <img th:each="img : ${product.images}" th:src="@{/uploads/{f}(f=${img.fileName})}" alt=""
+             style="width:100%;border-radius:8px;"/>
+    </div>
+    <form class="stacked" th:action="@{/merchant/products/{id}(id=${product.id})}" method="post"
+          enctype="multipart/form-data">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <label>Title <input type="text" name="title" required th:value="${product.title}"/></label>
+        <label>Description <textarea name="description" rows="4" th:text="${product.description}"></textarea></label>
+        <label>Price <input type="number" name="price" step="0.01" min="0" required
+                            th:value="${product.price}"/></label>
+        <label>Stock <input type="number" name="stock" min="0" required th:value="${product.stock}"/></label>
+        <label>Add images <input type="file" name="images" multiple accept="image/*"/></label>
+        <label><input type="checkbox" name="replaceImages" value="true"/> Replace all existing images</label>
+        <button type="submit">Update</button>
+    </form>
+</main>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Register</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div th:replace="~{fragments :: nav}"></div>
+<main>
+    <div th:replace="~{fragments :: flash}"></div>
+    <h1>Register</h1>
+    <form class="stacked" th:action="@{/register}" th:object="${form}" method="post">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <label>Account type
+            <select th:field="*{accountType}">
+                <option value="SHOPPER">Shopper</option>
+                <option value="MERCHANT">Merchant (needs admin approval)</option>
+            </select>
+        </label>
+        <label>Email
+            <input type="email" th:field="*{email}" required/>
+        </label>
+        <p class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+        <label>Password (min 6)
+            <input type="password" th:field="*{password}" required/>
+        </label>
+        <p class="error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
+        <label>Business name (merchants)
+            <input type="text" th:field="*{businessName}"/>
+        </label>
+        <p class="error" th:if="${#fields.hasErrors('businessName')}" th:errors="*{businessName}"></p>
+        <label>Business description
+            <textarea th:field="*{description}" rows="3"></textarea>
+        </label>
+        <button type="submit">Create account</button>
+    </form>
+</main>
+</body>
+</html>

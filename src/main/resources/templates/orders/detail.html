@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Order</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div th:replace="~{fragments :: nav}"></div>
+<main>
+    <div th:replace="~{fragments :: flash}"></div>
+    <h1>Order #<span th:text="${order.id}"></span></h1>
+    <p><span class="pill" th:text="${order.status}"></span>
+        Total: <span th:text="${#numbers.formatDecimal(order.totalAmount,1,2)}"></span></p>
+    <table class="data">
+        <tr th:each="line : ${order.lines}">
+            <td th:text="${line.productTitle}"></td>
+            <td th:text="${line.quantity}"></td>
+            <td th:text="${#numbers.formatDecimal(line.unitPrice,1,2)}"></td>
+        </tr>
+    </table>
+    <p th:if="${order.status.name() == 'PENDING_PAYMENT'}">
+        <a class="btn" th:href="@{/orders/{id}/pay(id=${order.id})}">Pay (mock)</a>
+    </p>
+    <h2>Timeline</h2>
+    <ul class="meta">
+        <li th:each="e : ${events}">
+            <span th:text="${e.createdAt}"></span> —
+            <span th:text="${e.status}"></span>
+            <span th:if="${e.note != null}" th:text="${': ' + e.note}"></span>
+        </li>
+    </ul>
+    <div sec:authorize="hasRole('SHOPPER')" th:if="${order.status.name() != 'PENDING_PAYMENT'}">
+        <h2>Open dispute</h2>
+        <form class="stacked" th:action="@{/orders/{id}/disputes(id=${order.id})}" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <label>Describe the issue
+                <textarea name="description" rows="3" required></textarea>
+            </label>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</main>
+</body>
+</html>

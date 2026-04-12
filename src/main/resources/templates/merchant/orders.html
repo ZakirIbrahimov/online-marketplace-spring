@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Seller orders</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div th:replace="~{fragments :: nav}"></div>
+<main>
+    <div th:replace="~{fragments :: flash}"></div>
+    <h1>Orders</h1>
+    <table class="data">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>When</th>
+            <th>Status</th>
+            <th>Total</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="o : ${orders}">
+            <td th:text="${o.id}"></td>
+            <td th:text="${o.createdAt}"></td>
+            <td><span class="pill" th:text="${o.status}"></span></td>
+            <td th:text="${#numbers.formatDecimal(o.totalAmount,1,2)}"></td>
+            <td><a th:href="@{/merchant/orders/{id}(id=${o.id})}">Manage</a></td>
+        </tr>
+        </tbody>
+    </table>
+    <p th:if="${orders.isEmpty()}" class="meta">No orders yet.</p>
+</main>
+</body>
+</html>

@@ -1,0 +1,55 @@
+spring:
+  application:
+    name: marketplace
+  profiles:
+    active: dev
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 10MB
+  jpa:
+    hibernate:
+      # Flyway owns schema; SQLite reports INTEGER for IDs — Hibernate validate expects BIGINT
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
+  flyway:
+    enabled: true
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: jdbc:sqlite:./data/marketplace.db
+    driver-class-name: org.sqlite.JDBC
+    hikari:
+      connection-init-sql: PRAGMA foreign_keys = ON
+  flyway:
+    locations: classpath:db/migration/sqlite
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.community.dialect.SQLiteDialect
+
+marketplace:
+  upload-dir: ${user.dir}/uploads/products
+
+---
+spring:
+  config:
+    activate:
+      on-profile: postgres
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/marketplace}
+    username: ${DATABASE_USER:marketplace}
+    password: ${DATABASE_PASSWORD:marketplace}
+    driver-class-name: org.postgresql.Driver
+  flyway:
+    locations: classpath:db/migration/postgresql
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
