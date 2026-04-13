@@ -161,8 +161,8 @@ docs/
 
 ## Documentation
 
-- [Full Project Report](docs/Project-Report.pdf) — 39-page report covering architecture, OOP concepts, workflows, and future improvements
-- [UML Diagram](docs/UML-Diagram.pdf) — Class and relationship diagram for the domain model
+- [Full Project Report](docs/Project's-Report[1].pdf) — 39-page report covering architecture, OOP concepts, workflows, and future improvements
+- [UML Diagram](docs/Project's_UML_Diagram[1].pdf) — Class and relationship diagram for the domain model
 
 ---
 
